@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=2.0">
-    <title>Área Ninja · Modos de Cálculo</title>
+    <title>Área Ninja · Cálculo Multinivel</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Share+Tech+Mono&family=Zen+Antique&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js">
+    </script>
     <style>
         :root {
             --ink: #1a1208;
@@ -20,14 +23,14 @@
             --ink2: #2c2010;
             --muted: #7a6a50;
             --border: #b8a87a;
+            --purple: #a78bfa;
+            --pink: #f472b6;
         }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-
         body {
             background: #0d0b07;
             font-family: 'Share Tech Mono', monospace;
@@ -36,9 +39,7 @@
             align-items: center;
             justify-content: center;
             padding: 12px;
-            margin: 0;
         }
-
         .shell {
             width: 96vw;
             max-width: 1400px;
@@ -49,11 +50,10 @@
             border-radius: 6px;
             overflow: hidden;
             position: relative;
-            box-shadow: 0 0 0 4px #0d0b07, 0 0 0 6px var(--border), 0 25px 70px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 0 4px #0d0b07, 0 0 0 6px var(--border), 0 25px 70px rgba(0, 0, 0, .9);
             display: flex;
             flex-direction: column;
         }
-
         .hud {
             background: var(--ink);
             padding: 10px 18px;
@@ -63,13 +63,11 @@
             border-bottom: 2px solid var(--gold);
             flex-shrink: 0;
         }
-
         .lives {
             display: flex;
             gap: 6px;
             align-items: center;
         }
-
         .heart {
             width: 24px;
             height: 24px;
@@ -77,15 +75,21 @@
             clip-path: polygon(50% 90%, 10% 40%, 0% 20%, 15% 5%, 30% 5%, 50% 20%, 70% 5%, 85% 5%, 100% 20%, 90% 40%);
             animation: pulse 1.4s ease-in-out infinite;
         }
-
-        .heart:nth-child(2) { animation-delay: 0.2s }
-        .heart:nth-child(3) { animation-delay: 0.4s }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1) }
-            50% { transform: scale(1.18) }
+        .heart:nth-child(2) {
+            animation-delay: .2s
         }
-
+        .heart:nth-child(3) {
+            animation-delay: .4s
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1)
+            }
+            50% {
+                transform: scale(1.18)
+            }
+        }
         .hud-title {
             flex: 1;
             text-align: center;
@@ -94,36 +98,31 @@
             color: var(--gold-light);
             letter-spacing: 7px;
         }
-
         .hud-pill {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(200, 160, 60, 0.4);
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(200, 160, 60, .4);
             border-radius: 4px;
             padding: 5px 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-
         .hud-pill .lbl {
             font-size: 8px;
             color: var(--gold);
             letter-spacing: 2px;
             text-transform: uppercase;
         }
-
         .hud-pill .val {
             font-size: 18px;
             font-weight: 700;
             color: var(--gold-light);
         }
-
         .body {
             display: flex;
             flex: 1;
             min-height: 0;
         }
-
         .sidebar {
             width: 150px;
             flex-shrink: 0;
@@ -134,20 +133,18 @@
             flex-direction: column;
             gap: 8px;
         }
-
         .sec-lbl {
             font-size: 8px;
             letter-spacing: 3px;
             color: var(--gold);
             text-transform: uppercase;
             padding-bottom: 6px;
-            border-bottom: 1px solid rgba(200, 160, 60, 0.25);
+            border-bottom: 1px solid rgba(200, 160, 60, .25);
             margin-bottom: 2px;
         }
-
         .mode-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(200, 160, 60, 0.2);
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(200, 160, 60, .2);
             border-radius: 3px;
             padding: 9px 10px;
             color: var(--scroll);
@@ -155,27 +152,25 @@
             font-size: 11px;
             cursor: pointer;
             text-align: left;
-            transition: all 0.15s;
+            transition: all .15s;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-
         .mode-btn:hover {
-            background: rgba(200, 160, 60, 0.12);
+            background: rgba(200, 160, 60, .12);
             border-color: var(--gold);
             color: var(--gold-light);
         }
-
         .mode-btn.active {
-            background: rgba(200, 160, 60, 0.18);
+            background: rgba(200, 160, 60, .18);
             border-color: var(--gold);
             color: var(--gold-light);
             border-left: 3px solid var(--gold);
         }
-
-        .sb-spacer { flex: 1; }
-
+        .sb-spacer {
+            flex: 1;
+        }
         .action-btn {
             width: 100%;
             padding: 10px;
@@ -186,39 +181,40 @@
             font-size: 12px;
             letter-spacing: 2px;
             font-weight: 700;
-            transition: all 0.15s;
+            transition: all .15s;
         }
-
         .btn-start {
             background: var(--teal);
             color: #e0f5ef;
             border: 1px solid var(--teal-light);
         }
-
-        .btn-start:hover { background: var(--teal-light); color: #fff; }
-
+        .btn-start:hover {
+            background: var(--teal-light);
+            color: #fff;
+        }
         .btn-quit {
             background: transparent;
             color: var(--red-light);
-            border: 1px solid rgba(192, 57, 43, 0.4);
+            border: 1px solid rgba(192, 57, 43, .4);
             margin-top: 4px;
         }
-
-        .btn-quit:hover { background: rgba(192, 57, 43, 0.15); }
-
+        .btn-quit:hover {
+            background: rgba(192, 57, 43, .15);
+        }
         .info-box {
             padding: 8px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(200, 160, 60, 0.15);
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(200, 160, 60, .15);
             border-radius: 3px;
             font-size: 9px;
             color: var(--muted);
             line-height: 1.8;
             margin-top: 6px;
         }
-
-        .info-box span { color: var(--gold); font-weight: bold; }
-
+        .info-box span {
+            color: var(--gold);
+            font-weight: bold;
+        }
         .game-panel {
             flex: 1;
             display: flex;
@@ -226,15 +222,13 @@
             min-width: 0;
             min-height: 0;
         }
-
         .columns-wrap {
             flex: 1;
             display: flex;
             min-height: 0;
         }
-
         .pu-strip {
-            width: 38px;
+            width: 44px;
             flex-shrink: 0;
             background: var(--paper2);
             border-right: 1px solid var(--border);
@@ -242,9 +236,7 @@
             flex-direction: column;
             align-items: center;
             padding: 8px 0;
-            gap: 0;
         }
-
         .pu-label {
             font-size: 7px;
             letter-spacing: 1px;
@@ -253,9 +245,8 @@
             writing-mode: vertical-rl;
             transform: rotate(180deg);
             padding: 6px 0;
-            opacity: 0.8;
+            opacity: .8;
         }
-
         .pu-item {
             flex: 1;
             width: 100%;
@@ -263,21 +254,56 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-family: 'Noto Serif JP', serif;
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--muted);
+            font-size: 18px;
             border-left: 3px solid transparent;
-            transition: all 0.15s;
+            transition: all .15s;
+            border-top: 1px solid rgba(0, 0, 0, .06);
         }
-
-        .pu-item:hover { background: rgba(0, 0, 0, 0.06); color: var(--ink); }
-        .pu-item.active {
-            color: var(--gold);
+        .pu-item .pu-icon {
+            pointer-events: none;
+            transition: transform .15s;
+        }
+        .pu-item:hover .pu-icon {
+            transform: scale(1.2);
+        }
+        .pu-item.empty .pu-icon {
+            opacity: .15;
+            filter: grayscale(1);
+        }
+        .pu-item.empty {
+            cursor: default;
+        }
+        .pu-item.loaded {
+            background: rgba(200, 160, 60, .1);
             border-left-color: var(--gold);
-            background: rgba(200, 160, 60, 0.12);
+            animation: puPulse 2s ease-in-out infinite;
         }
-
+        @keyframes puPulse {
+            0%,
+            100% {
+                box-shadow: inset 0 0 0 0 rgba(240, 180, 40, 0);
+            }
+            50% {
+                box-shadow: inset 0 0 8px 2px rgba(240, 180, 40, .15);
+            }
+        }
+        .pu-item.selected {
+            background: rgba(240, 180, 40, .25);
+            border-left-color: var(--gold-light);
+            box-shadow: inset 0 0 10px 2px rgba(240, 180, 40, .25);
+            animation: none;
+        }
+        .pu-item.activating {
+            animation: puActivate .4s ease-out forwards;
+        }
+        @keyframes puActivate {
+            0% {
+                background: rgba(240, 180, 40, .5);
+            }
+            100% {
+                background: transparent;
+            }
+        }
         .cols {
             flex: 1;
             display: grid;
@@ -285,16 +311,15 @@
             min-width: 0;
             min-height: 0;
         }
-
         .fall-col {
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             min-height: 0;
         }
-
-        .fall-col:last-child { border-right: none; }
-
+        .fall-col:last-child {
+            border-right: none;
+        }
         .col-hdr {
             padding: 9px 8px;
             background: var(--paper2);
@@ -305,164 +330,410 @@
             text-align: center;
             flex-shrink: 0;
         }
-
         .fall-zone {
             flex: 1;
             position: relative;
             overflow: hidden;
             padding: 12px;
-            background: repeating-linear-gradient(0deg, transparent, transparent 42px, rgba(0, 0, 0, 0.03) 42px, rgba(0, 0, 0, 0.03) 43px);
+            background: repeating-linear-gradient(0deg, transparent, transparent 42px, rgba(0, 0, 0, .03) 42px, rgba(0, 0, 0, .03) 43px);
             min-height: 250px;
         }
-
         .fcard {
             position: absolute;
-            left: 10px;
-            right: 10px;
+            left: 8px;
+            right: 8px;
             background: var(--ink);
             border-radius: 6px;
             border: 1px solid var(--gold);
-            padding: 14px 12px 40px 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-            top: -200px;
+            padding: 10px 10px 44px 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .5);
+            top: -220px;
             animation: fallDown linear forwards;
-            pointer-events: auto;
+            transition: opacity .3s;
         }
-
+        .fcard.has-powerup {
+            border-color: var(--purple);
+            box-shadow: 0 0 14px 4px rgba(167, 139, 250, .35), 0 8px 20px rgba(0, 0, 0, .5);
+        }
+        .fcard.has-heart {
+            border-color: var(--pink);
+            box-shadow: 0 0 14px 4px rgba(244, 114, 182, .35), 0 8px 20px rgba(0, 0, 0, .5);
+        }
         @keyframes fallDown {
-            0% { top: -200px; }
-            100% { top: 105%; }
+            0% {
+                top: -220px
+            }
+            100% {
+                top: 105%
+            }
         }
-
-        .fc-lbl { font-size: 9px; color: var(--gold); letter-spacing: 2px; margin-bottom: 7px; text-transform: uppercase; }
-        .fc-expr {
-            font-family: 'Noto Serif JP', serif;
-            font-size: clamp(17px, 2.8vw, 24px);
-            color: var(--paper);
-            text-align: center;
-            padding: 10px 0;
-            line-height: 1.5;
+        .fc-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
         }
-        .fc-expr sub, .fc-expr sup { font-size: 13px; }
-
+        .fc-lbl {
+            font-size: 8px;
+            color: var(--gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
         .fc-badge {
             display: inline-block;
-            padding: 3px 8px;
+            padding: 2px 7px;
             border-radius: 3px;
             font-size: 8px;
             letter-spacing: 1px;
             font-weight: bold;
         }
-
-        .easy { background: rgba(26, 107, 90, .3); color: #7be0c0; border: 1px solid rgba(26, 107, 90, .5); }
-        .med { background: rgba(201, 146, 42, .25); color: var(--gold-light); border: 1px solid rgba(201, 146, 42, .5); }
-        .hard { background: rgba(192, 57, 43, .25); color: #f1948a; border: 1px solid rgba(192, 57, 43, .5); }
-
-        .combo {
-            position: absolute;
-            top: 8px; right: 8px;
-            background: var(--gold);
-            color: var(--ink);
-            font-size: 9px; font-weight: 700;
-            letter-spacing: 1px;
-            padding: 3px 8px;
-            border-radius: 2px;
+        .easy {
+            background: rgba(26, 107, 90, .3);
+            color: #7be0c0;
+            border: 1px solid rgba(26, 107, 90, .5);
         }
-
-        .tring { position: absolute; bottom: 6px; right: 6px; width: 36px; height: 36px; }
-        .tring svg { width: 36px; height: 36px; transform: rotate(-90deg); }
-        .tr-track { fill: none; stroke: rgba(200, 160, 60, .2); stroke-width: 3; }
+        .med {
+            background: rgba(201, 146, 42, .25);
+            color: var(--gold-light);
+            border: 1px solid rgba(201, 146, 42, .5);
+        }
+        .hard {
+            background: rgba(192, 57, 43, .25);
+            color: #f1948a;
+            border: 1px solid rgba(192, 57, 43, .5);
+        }
+        .fc-math {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 4px 4px 4px;
+            min-height: 54px;
+            font-size: clamp(14px, 2vw, 18px);
+            color: var(--paper);
+        }
+        .fc-math .katex {
+            font-size: 1.1em;
+        }
+        .pu-card-badge {
+            position: absolute;
+            top: 8px;
+            right: 46px;
+            font-size: 16px;
+            animation: badgeBounce 1.2s ease-in-out infinite;
+            pointer-events: none;
+            line-height: 1;
+        }
+        @keyframes badgeBounce {
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+            50% {
+                transform: translateY(-4px)
+            }
+        }
+        .tring {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            width: 36px;
+            height: 36px;
+        }
+        .tring svg {
+            width: 36px;
+            height: 36px;
+            transform: rotate(-90deg);
+        }
+        .tr-track {
+            fill: none;
+            stroke: rgba(200, 160, 60, .2);
+            stroke-width: 3;
+        }
         .tr-fill {
-            fill: none; stroke: var(--gold); stroke-width: 3;
-            stroke-linecap: round; stroke-dasharray: 78; stroke-dashoffset: 0;
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 78;
+            stroke-dashoffset: 0;
             animation: countdownRing linear forwards;
         }
         @keyframes countdownRing {
-            0% { stroke-dashoffset: 0; }
-            100% { stroke-dashoffset: 78; }
+            0% {
+                stroke-dashoffset: 0
+            }
+            100% {
+                stroke-dashoffset: 78
+            }
         }
         .tring-n {
-            position: absolute; inset: 0;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 700; color: var(--gold);
-        }
-
-        .danger-bar {
-            position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
-            background: var(--red); animation: blink .5s ease-in-out infinite;
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gold);
         }
         .ground {
-            position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-            background: var(--red); opacity: .4;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--red);
+            opacity: .4;
         }
-        @keyframes blink {
-            0%, 100% { opacity: 1 }
-            50% { opacity: .2 }
-        }
-
         .input-row {
-            display: flex; border-top: 2px solid var(--border);
-            background: var(--paper2); flex-shrink: 0;
+            display: flex;
+            border-top: 2px solid var(--border);
+            background: var(--paper2);
+            flex-shrink: 0;
         }
         .input-corner {
-            width: 38px; flex-shrink: 0; background: var(--ink2);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; color: var(--gold);
+            width: 44px;
+            flex-shrink: 0;
+            background: var(--ink2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--gold);
         }
-        .input-cell { flex: 1; padding: 10px 14px; border-right: 1px solid var(--border); }
-        .input-cell:last-child { border-right: none; }
+        .input-cell {
+            flex: 1;
+            padding: 10px 14px;
+            border-right: 1px solid var(--border);
+        }
+        .input-cell:last-child {
+            border-right: none;
+        }
         .res-lbl {
-            font-size: 8px; color: var(--muted); letter-spacing: 2px;
-            text-transform: uppercase; display: flex; align-items: center; gap: 6px;
+            font-size: 8px;
+            color: var(--muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             margin-bottom: 6px;
         }
         .res-dot {
-            width: 7px; height: 7px; border-radius: 50%;
-            background: var(--red-light); animation: blink .8s ease-in-out infinite;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--red-light);
+            animation: blink .8s ease-in-out infinite;
         }
-        .ans-row { display: flex; gap: 6px; }
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1
+            }
+            50% {
+                opacity: .2
+            }
+        }
+        .ans-row {
+            display: flex;
+            gap: 6px;
+        }
         .ans-input {
-            flex: 1; background: var(--paper); border: 1px solid var(--border);
-            border-radius: 3px; padding: 9px 11px;
-            font-family: 'Share Tech Mono', monospace; font-size: 15px;
-            color: var(--ink); outline: none; transition: border-color 0.15s; min-width: 60px;
+            flex: 1;
+            background: var(--paper);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: 9px 11px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 15px;
+            color: var(--ink);
+            outline: none;
+            transition: border-color .15s;
+            min-width: 60px;
         }
-        .ans-input:focus { border-color: var(--gold); background: #fff; }
-        .ans-input::placeholder { color: var(--scroll); font-size: 12px; }
-        .ans-input:disabled { background: #e0d9cc; color: #8a7a6a; cursor: not-allowed; }
-
+        .ans-input:focus {
+            border-color: var(--gold);
+            background: #fff;
+        }
+        .ans-input::placeholder {
+            color: var(--scroll);
+            font-size: 12px;
+        }
+        .ans-input:disabled {
+            background: #e0d9cc;
+            color: #8a7a6a;
+            cursor: not-allowed;
+        }
         .sub-btn {
-            background: var(--red); color: #fff; border: none; border-radius: 3px;
-            width: 38px; height: 38px; cursor: pointer; font-size: 20px;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.15s; flex-shrink: 0;
+            background: var(--red);
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            width: 38px;
+            height: 38px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .15s;
+            flex-shrink: 0;
         }
-        .sub-btn:hover { background: var(--red-light); transform: scale(1.05); }
-
-        .gameover-overlay {
-            display: none; position: absolute; inset: 0;
-            background: rgba(10, 8, 4, 0.9); z-index: 20;
-            align-items: center; justify-content: center; flex-direction: column; gap: 16px;
+        .sub-btn:hover {
+            background: var(--red-light);
+            transform: scale(1.05);
         }
-        .gameover-overlay.on { display: flex; }
-        .go-title {
-            font-family: 'Zen Antique', serif; font-size: clamp(32px, 6vw, 48px);
-            color: var(--gold-light); letter-spacing: 12px;
+        .notif {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 8, 4, .92);
+            border: 1px solid var(--gold);
+            border-radius: 4px;
+            padding: 8px 20px;
+            font-size: 13px;
+            color: var(--gold-light);
+            letter-spacing: 2px;
+            z-index: 15;
+            white-space: nowrap;
+            animation: notifFade 2.5s ease forwards;
+            pointer-events: none;
         }
-        .go-sub { font-size: 13px; color: var(--muted); letter-spacing: 3px; }
-        .go-restart {
-            background: var(--teal); color: #fff; border: none; padding: 12px 28px;
-            font-family: 'Share Tech Mono', monospace; font-size: 14px; letter-spacing: 3px;
-            border-radius: 4px; cursor: pointer; margin-top: 12px;
+        @keyframes notifFade {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+            15% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            75% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
         }
-        .go-restart:hover { background: var(--teal-light); }
-
-        @media (max-width: 750px) {
-            .sidebar { width: 100px; padding: 8px 6px; gap: 5px; }
-            .mode-btn { font-size: 9px; padding: 7px 5px; }
-            .pu-strip { width: 28px; }
-            .fc-expr { font-size: 14px; }
-            .ans-input { font-size: 12px; padding: 7px; }
+        .pu-banner {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            z-index: 12;
+            pointer-events: none;
+        }
+        .pu-banner.freeze {
+            background: linear-gradient(90deg, #38bdf8, #bae6fd, #38bdf8);
+            background-size: 200% 100%;
+            animation: bannerFlow 1.2s linear infinite;
+        }
+        .pu-banner.inverse {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b);
+            background-size: 200% 100%;
+            animation: bannerFlow 1.2s linear infinite;
+        }
+        @keyframes bannerFlow {
+            0% {
+                background-position: 0 0
+            }
+            100% {
+                background-position: 200% 0
+            }
+        }
+        .gameover-overlay,
+        .win-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 8, 4, .92);
+            z-index: 20;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .gameover-overlay.on,
+        .win-overlay.on {
+            display: flex;
+        }
+        .go-title,
+        .win-title {
+            font-family: 'Zen Antique', serif;
+            font-size: clamp(32px, 6vw, 48px);
+            color: var(--gold-light);
+            letter-spacing: 12px;
+            text-align: center;
+        }
+        .go-sub,
+        .win-sub {
+            font-size: 13px;
+            color: var(--muted);
+            letter-spacing: 3px;
+            text-align: center;
+        }
+        .go-restart,
+        .win-continue {
+            background: var(--teal);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 14px;
+            letter-spacing: 3px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        .go-restart:hover,
+        .win-continue:hover {
+            background: var(--teal-light);
+        }
+        .burst {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            pointer-events: none;
+            z-index: 10;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: burstAnim .5s ease-out forwards;
+        }
+        @keyframes burstAnim {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0);
+            }
+            60% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.4);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(2);
+            }
+        }
+        @media(max-width:750px) {
+            .sidebar {
+                width: 100px;
+                padding: 8px 6px;
+                gap: 5px
+            }
+            .mode-btn {
+                font-size: 9px;
+                padding: 7px 5px
+            }
+            .pu-strip {
+                width: 32px
+            }
+            .ans-input {
+                font-size: 12px;
+                padding: 7px
+            }
         }
     </style>
 </head>
@@ -470,56 +741,56 @@
     <div class="shell">
         <div class="hud">
             <div class="lives" id="livesContainer">
-                <div class="heart"></div>
-                <div class="heart"></div>
-                <div class="heart"></div>
+                <div class="heart"></div><div class="heart"></div><div class="heart"></div>
             </div>
             <div class="hud-title">&#x5FCD;&#x8005; ÁREA NINJA &#x5FCD;&#x8005;</div>
             <div class="hud-pill"><span class="lbl">nivel</span><span class="val" id="levelDisplay">01</span></div>
             <div class="hud-pill"><span class="lbl">puntos</span><span class="val" id="pointsDisplay">0</span></div>
+            <div class="hud-pill"><span class="lbl">restan</span><span class="val" id="remainingDisplay">0</span></div>
         </div>
 
         <div class="body">
             <div class="sidebar">
                 <div class="sec-lbl">modos</div>
-                <button class="mode-btn active" data-mode="limites"><span>&#8594;</span> Límites</button>
-                <button class="mode-btn" data-mode="derivadas"><span>&#8242;</span> Derivadas</button>
-                <button class="mode-btn" data-mode="integrales"><span>&#8747;</span> Integrales</button>
-                <button class="mode-btn" data-mode="combinado"><span>&#9670;</span> Combinado</button>
+                <button class="mode-btn active" data-mode="limites"><span>→</span> Límites</button>
+                <button class="mode-btn" data-mode="derivadas"><span>′</span> Derivadas</button>
+                <button class="mode-btn" data-mode="integrales"><span>∫</span> Integrales</button>
+                <button class="mode-btn" data-mode="combinado"><span>◆</span> Combinado</button>
                 <div class="sb-spacer"></div>
-                <button class="action-btn btn-start" id="startBtn">&#9654; INICIAR</button>
-                <button class="action-btn btn-quit" id="quitBtn">&#9632; RENDIRSE</button>
+                <button class="action-btn btn-start" id="startBtn">▶ INICIAR</button>
+                <button class="action-btn btn-quit" id="quitBtn">■ RENDIRSE</button>
                 <div class="info-box">
                     Resuelve antes de que llegue al suelo.<br><br>
-                    <span>Exacta</span> → 100 pts<br>
-                    <span>±10%</span> → 50 pts<br>
-                    <span>±30%</span> → 20 pts<br><br>
-                    <span>A–E</span> activa potenciadores
+                    <span>±20%</span> → válido<br>
+                    <span>inf / dne</span> → exacto<br><br>
+                    <span>?</span> = power-up oculto<br>
+                    <span>♥</span> = vida extra
                 </div>
             </div>
 
             <div class="game-panel">
-                <div class="columns-wrap">
-                    <div class="pu-strip">
+                <div class="columns-wrap" id="columnsWrap">
+                    <div class="pu-strip" id="puStrip">
                         <div class="pu-label">power-ups</div>
-                        <div class="pu-item" title="Freeze">A</div>
-                        <div class="pu-item" title="Hint">B</div>
-                        <div class="pu-item active" title="Bomba">C</div>
-                        <div class="pu-item" title="Papel">D</div>
-                        <div class="pu-item" title="Zoom">E</div>
+                        <div class="pu-item empty" id="puSlot0" data-slot="0" title="Vacío"><span class="pu-icon" style="font-size:10px;color:#7a6a50;">—</span></div>
+                        <div class="pu-item empty" id="puSlot1" data-slot="1" title="Vacío"><span class="pu-icon" style="font-size:10px;color:#7a6a50;">—</span></div>
+                        <div class="pu-item empty" id="puSlot2" data-slot="2" title="Vacío"><span class="pu-icon" style="font-size:10px;color:#7a6a50;">—</span></div>
+                        <div class="pu-item empty" id="puSlot3" data-slot="3" title="Vacío"><span class="pu-icon" style="font-size:10px;color:#7a6a50;">—</span></div>
+                        <div class="pu-item empty" id="puSlot4" data-slot="4" title="Vacío"><span class="pu-icon" style="font-size:10px;color:#7a6a50;">—</span></div>
                     </div>
+
                     <div class="cols" id="gameColumns">
                         <div class="fall-col" data-col="0">
                             <div class="col-hdr">— COLUMNA I —</div>
-                            <div class="fall-zone" id="zone0"></div>
+                            <div class="fall-zone" id="zone0"><div class="ground"></div></div>
                         </div>
                         <div class="fall-col" data-col="1">
                             <div class="col-hdr">— COLUMNA II —</div>
-                            <div class="fall-zone" id="zone1"></div>
+                            <div class="fall-zone" id="zone1"><div class="ground"></div></div>
                         </div>
                         <div class="fall-col" data-col="2">
                             <div class="col-hdr">— COLUMNA III —</div>
-                            <div class="fall-zone" id="zone2"></div>
+                            <div class="fall-zone" id="zone2"><div class="ground"></div></div>
                         </div>
                     </div>
                 </div>
@@ -551,283 +822,1059 @@
             </div>
         </div>
 
+        <!-- Game Over overlay -->
         <div class="gameover-overlay" id="gameOverOverlay">
             <div class="go-title">JUEGO TERMINADO</div>
             <div class="go-sub">presiona reiniciar para volver a intentarlo</div>
             <button class="go-restart" id="restartFromOverBtn">REINICIAR</button>
         </div>
+
+        <!-- Win overlay (levels 1 & 2) -->
+        <div class="win-overlay" id="winOverlay">
+            <div class="win-title" id="winTitle">¡NIVEL SUPERADO!</div>
+            <div class="win-sub" id="winSub"></div>
+            <button class="win-continue" id="winContinueBtn">CONTINUAR</button>
+        </div>
+
+        <!-- Final victory overlay (level 3) -->
+        <div class="win-overlay" id="finalWinOverlay">
+            <div class="win-title">🏆 ¡JUEGO COMPLETADO! 🏆</div>
+            <div class="win-sub">Has dominado todos los niveles del Área Ninja</div>
+            <button class="go-restart" id="finalRestartBtn">REINICIAR</button>
+        </div>
     </div>
 
     <script>
         (function() {
+
+            /* ======================================================
+               LEVEL CONFIGURATION
+               - fallTimes in seconds
+               - puDifficulty: difficulty of the card that carries a powerup
+               - puInterval: spawn a powerup card every N cards resolved
+            ====================================================== */
+            const LEVEL_CONFIG = {
+                1: {
+                    total: 10,
+                    composition: { easy: 8, medium: 2, hard: 0 },
+                    fallTimes: { easy: 40, medium: 80, hard: 120 },
+                    puDifficulty: 'easy',
+                    puInterval: 3
+                },
+                2: {
+                    total: 8,
+                    composition: { easy: 2, medium: 5, hard: 1 },
+                    fallTimes: { easy: 40, medium: 80, hard: 120 },
+                    puDifficulty: 'medium',
+                    puInterval: 3
+                },
+                3: {
+                    total: 5,
+                    composition: { easy: 1, medium: 3, hard: 1 },
+                    fallTimes: { easy: 40, medium: 80, hard: 120 },
+                    puDifficulty: 'medium',
+                    puInterval: 2
+                },
+            };
+
+            const POWERUP_TYPES = ['freeze', 'bomb', 'inverse', 'shield', 'fermat'];
+            const PU_META = {
+                freeze: { icon: '⏸️', label: 'Freeze' },
+                bomb: { icon: '💣', label: 'Bomba' },
+                inverse: { icon: '⏪', label: 'Cálculo Inverso' },
+                shield: { icon: '🛡️', label: 'Escudo de Cauchy' },
+                fermat: { icon: '🧠', label: 'Golpe de Genio' },
+            };
+
+            /* ======================================================
+               LOCAL PROBLEM POOL (for límites & fallback)
+               Now with LaTeX for KaTeX rendering.
+            ====================================================== */
+            const localPoolLimites = [
+                { latex: '\\lim_{x\\to 0}\\frac{\\sin x}{x}',
+                    answer: '1', difficulty: 'easy' },
+                { latex: '\\lim_{x\\to \\infty}\\left(1+\\frac{1}{x}\\right)^x',
+                    answer: 'e', difficulty: 'medium' },
+                { latex: '\\lim_{x\\to 0}\\frac{e^x-1}{x}', answer: '1',
+                    difficulty: 'easy' },
+                { latex: '\\lim_{x\\to 2}\\frac{x^2-4}{x-2}', answer: '4',
+                    difficulty: 'easy' },
+                { latex: '\\lim_{x\\to 0}\\frac{1-\\cos x}{x^2}',
+                    answer: '1/2', difficulty: 'medium' },
+                { latex: '\\lim_{x\\to \\infty}\\frac{3x^2+2x}{x^2-5}',
+                    answer: '3', difficulty: 'medium' },
+                { latex: '\\lim_{x\\to 0}\\frac{\\tan x}{x}', answer: '1',
+                    difficulty: 'easy' },
+                { latex: '\\lim_{x\\to 1}\\frac{x^3-1}{x-1}', answer: '3',
+                    difficulty: 'medium' },
+                { latex: '\\lim_{x\\to 0^+}x\\ln x', answer: '0',
+                difficulty: 'hard' },
+                { latex: '\\lim_{x\\to \\infty}\\frac{\\ln x}{x}',
+                    answer: '0', difficulty: 'medium' },
+                { latex: '\\lim_{x\\to 0}\\frac{\\sin 3x}{x}', answer: '3',
+                    difficulty: 'easy' },
+                { latex: '\\lim_{x\\to \\infty}\\frac{2x^3-x}{x^3+4}',
+                    answer: '2', difficulty: 'easy' },
+                { latex: '\\lim_{x\\to 0}\\frac{1}{x^2}', answer: '+∞',
+                    difficulty: 'medium' },
+                { latex: '\\lim_{x\\to 0}\\frac{|x|}{x}', answer: 'dne',
+                    difficulty: 'hard' },
+                { latex: '\\lim_{x\\to \\pi/2}\\tan x', answer: 'dne',
+                    difficulty: 'medium' },
+            ];
+
+            /* ======================================================
+               STATE
+            ====================================================== */
             const state = {
                 mode: 'limites',
                 running: false,
-                cards: [],
+                level: 1,
                 lives: 3,
                 points: 0,
-                level: 1
+                cards: [], // active card objects
+                levelQueue: [], // problems remaining for this level (not yet spawned)
+                levelTotal: 0,
+                levelResolved: 0,
+                puSlots: [null, null, null, null, null],
+                selectedSlot: -1,
+                freezeActive: false,
+                freezeTimeout: null,
+                shieldActive: false,
+                puCounter: 0, // counts resolved cards; when it hits puInterval, next card gets powerup
             };
 
-            const problemPools = {
-                limites: [
-                    { expr: "lim<sub>x→0</sub> sin(x)/x", answer: "1", difficulty: "BÁSICO", time: 9 },
-                    { expr: "lim<sub>x→∞</sub> (1+1/x)<sup>x</sup>", answer: "e", difficulty: "MEDIO", time: 11 },
-                    { expr: "lim<sub>x→0</sub> (e<sup>x</sup>-1)/x", answer: "1", difficulty: "BÁSICO", time: 8 },
-                    { expr: "lim<sub>x→2</sub> (x²-4)/(x-2)", answer: "4", difficulty: "BÁSICO", time: 10 },
-                    { expr: "lim<sub>x→0</sub> (1-cos x)/x²", answer: "1/2", difficulty: "MEDIO", time: 12 },
-                    { expr: "lim<sub>x→∞</sub> (3x²+2x)/(x²-5)", answer: "3", difficulty: "MEDIO", time: 9 }
-                ],
-                derivadas: [
-                    { expr: "d/dx (x² sin x)", answer: "2x sin x + x² cos x", difficulty: "MEDIO", time: 10 },
-                    { expr: "d/dx (ln(x²+1))", answer: "2x/(x²+1)", difficulty: "BÁSICO", time: 9 },
-                    { expr: "d/dx (e<sup>3x</sup>)", answer: "3e^(3x)", difficulty: "BÁSICO", time: 8 },
-                    { expr: "d/dx (tan x)", answer: "sec² x", difficulty: "MEDIO", time: 11 },
-                    { expr: "d/dx (√(x+1))", answer: "1/(2√(x+1))", difficulty: "DIFÍCIL", time: 13 }
-                ],
-                integrales: [
-                    { expr: "∫<sub>0</sub><sup>3</sup> x² dx", answer: "9", difficulty: "BÁSICO", time: 9 },
-                    { expr: "∫<sub>0</sub><sup>π</sup> sin x dx", answer: "2", difficulty: "MEDIO", time: 11 },
-                    { expr: "∫<sub>1</sub><sup>e</sup> ln x dx", answer: "1", difficulty: "DIFÍCIL", time: 8 },
-                    { expr: "∫<sub>0</sub><sup>1</sup> 3x² dx", answer: "1", difficulty: "BÁSICO", time: 7 },
-                    { expr: "∫<sub>0</sub><sup>2</sup> (2x+1) dx", answer: "6", difficulty: "MEDIO", time: 10 }
-                ],
-                combinado: []
-            };
-            problemPools.combinado = [
-                ...problemPools.limites.slice(0, 3),
-                ...problemPools.derivadas.slice(0, 3),
-                ...problemPools.integrales.slice(0, 3)
-            ];
-
+            /* ======================================================
+               DOM REFS
+            ====================================================== */
             const livesContainer = document.getElementById('livesContainer');
             const levelDisplay = document.getElementById('levelDisplay');
             const pointsDisplay = document.getElementById('pointsDisplay');
-            const zones = [
-                document.getElementById('zone0'),
-                document.getElementById('zone1'),
-                document.getElementById('zone2')
-            ];
-            const answerInputs = [
-                document.getElementById('answer0'),
-                document.getElementById('answer1'),
-                document.getElementById('answer2')
-            ];
+            const remainingDisplay = document.getElementById('remainingDisplay');
+            const zones = [0, 1, 2].map(i => document.getElementById('zone' + i));
+            const answerInputs = [0, 1, 2].map(i => document.getElementById('answer' + i));
             const submitBtns = document.querySelectorAll('.sub-btn');
             const startBtn = document.getElementById('startBtn');
             const quitBtn = document.getElementById('quitBtn');
             const gameOverOverlay = document.getElementById('gameOverOverlay');
             const restartFromOverBtn = document.getElementById('restartFromOverBtn');
+            const winOverlay = document.getElementById('winOverlay');
+            const winTitle = document.getElementById('winTitle');
+            const winSub = document.getElementById('winSub');
+            const winContinueBtn = document.getElementById('winContinueBtn');
+            const finalWinOverlay = document.getElementById('finalWinOverlay');
+            const finalRestartBtn = document.getElementById('finalRestartBtn');
             const modeBtns = document.querySelectorAll('.mode-btn');
+            const puSlotEls = [0, 1, 2, 3, 4].map(i => document.getElementById('puSlot' + i));
+            const gameColumns = document.getElementById('gameColumns');
+            const columnsWrap = document.getElementById('columnsWrap');
 
+            /* ======================================================
+               HUD
+            ====================================================== */
             function updateHUD() {
                 levelDisplay.textContent = state.level.toString().padStart(2, '0');
                 pointsDisplay.textContent = state.points.toLocaleString();
+                const left = state.levelQueue.length + state.cards.length;
+                remainingDisplay.textContent = left;
                 livesContainer.innerHTML = '';
                 for (let i = 0; i < state.lives; i++) {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart';
-                    livesContainer.appendChild(heart);
+                    const h = document.createElement('div');
+                    h.className = 'heart';
+                    livesContainer.appendChild(h);
                 }
-                if (state.lives === 0) {
-                    endGame();
+                if (state.lives <= 0 && state.running) endGame();
+            }
+
+            /* ======================================================
+               NOTIFICATIONS
+            ====================================================== */
+            function notify(msg) {
+                const existing = columnsWrap.querySelectorAll('.notif');
+                if (existing.length > 2) existing[0].remove();
+                const n = document.createElement('div');
+                n.className = 'notif';
+                n.textContent = msg;
+                columnsWrap.style.position = 'relative';
+                columnsWrap.appendChild(n);
+                setTimeout(() => n.remove(), 2600);
+            }
+
+            /* ======================================================
+               POWERUP SLOTS UI
+            ====================================================== */
+            function renderPuSlots() {
+                state.puSlots.forEach((pu, i) => {
+                    const el = puSlotEls[i];
+                    el.className = 'pu-item';
+                    if (!pu) {
+                        el.className += ' empty';
+                        el.title = 'Vacío';
+                        el.innerHTML =
+                            '<span class="pu-icon" style="font-size:10px;color:#7a6a50;">—</span>';
+                    } else {
+                        const def = PU_META[pu.type];
+                        el.className += (i === state.selectedSlot) ? ' selected' :
+                            ' loaded';
+                        el.title = def.label;
+                        el.innerHTML =
+                            `<span class="pu-icon" style="font-size:20px;">${def.icon}</span>`;
+                    }
+                });
+            }
+
+            function storePowerUp(type) {
+                const emptyIdx = state.puSlots.indexOf(null);
+                if (emptyIdx === -1) { notify('⚠ Slots llenos'); return false; }
+                state.puSlots[emptyIdx] = { type };
+                renderPuSlots();
+                notify(`${PU_META[type].icon} ${PU_META[type].label} obtenido!`);
+                return true;
+            }
+
+            function selectSlot(idx) {
+                if (!state.puSlots[idx] || !state.running) return;
+                state.selectedSlot = (state.selectedSlot === idx) ? -1 : idx;
+                renderPuSlots();
+            }
+
+            /* ======================================================
+               USE POWER-UP
+            ====================================================== */
+            function usePowerUp(slotIdx, targetCardObj) {
+                const pu = state.puSlots[slotIdx];
+                if (!pu) return;
+                const type = pu.type;
+                state.puSlots[slotIdx] = null;
+                state.selectedSlot = -1;
+                renderPuSlots();
+                const el = puSlotEls[slotIdx];
+                el.classList.add('activating');
+                setTimeout(() => el.classList.remove('activating'), 500);
+
+                switch (type) {
+                    case 'freeze':
+                        activateFreeze();
+                        break;
+                    case 'bomb':
+                        activateBomb();
+                        break;
+                    case 'inverse':
+                        activateInverse();
+                        break;
+                    case 'shield':
+                        activateShield();
+                        break;
+                    case 'fermat':
+                        activateFermat(targetCardObj);
+                        break;
                 }
             }
 
-            function getRandomProblem(mode) {
-                const pool = problemPools[mode] || problemPools.limites;
-                const idx = Math.floor(Math.random() * pool.length);
-                return { ...pool[idx] };
+            /* ---------- FREEZE ---------- */
+            function activateFreeze() {
+                if (state.freezeActive) clearTimeout(state.freezeTimeout);
+                state.freezeActive = true;
+                notify('⏸️ FREEZE — enemigos congelados 10s');
+                state.cards.forEach(c => {
+                    const computedTop = parseFloat(window.getComputedStyle(c.element).top);
+                    c.frozenTop = computedTop;
+                    c.element.style.animationPlayState = 'paused';
+                    c.frozen = true;
+                });
+                showBanner('freeze');
+                state.freezeTimeout = setTimeout(() => {
+                    state.freezeActive = false;
+                    state.cards.forEach(c => {
+                        if (!c.frozen) return;
+                        c.frozen = false;
+                        const el = c.element;
+                        const zone = zones[c.col];
+                        const zoneH = zone.offsetHeight;
+                        const frozenTop = c.frozenTop || parseFloat(window
+                            .getComputedStyle(el).top);
+                        const totalDist = zoneH + 220;
+                        const targetTop = zoneH * 1.05;
+                        const distLeft = targetTop - frozenTop;
+                        const fracLeft = Math.max(0.01, distLeft / totalDist);
+                        const timeLeft = Math.max(1, fracLeft * c.time);
+                        el.style.animationPlayState = 'paused';
+                        el.style.top = frozenTop + 'px';
+                        el.style.animation = 'none';
+                        void el.offsetWidth;
+                        el.style.animation =
+                            `fallDown ${timeLeft}s linear forwards`;
+                        el.style.animationPlayState = 'running';
+                    });
+                    hideBanner('freeze');
+                    notify('⏸️ Freeze terminado');
+                }, 10000);
             }
 
-            function createCardElement(problem, colIndex) {
+            /* ---------- BOMB ---------- */
+            function activateBomb() {
+                if (state.cards.length === 0) { notify('💣 No hay enemigos'); return; }
+                let closestCard = null,
+                    maxProgress = -1;
+                state.cards.forEach(c => {
+                    const topVal = parseFloat(window.getComputedStyle(c.element).top);
+                    const zone = zones[c.col];
+                    const zoneH = zone.offsetHeight;
+                    const prog = (topVal + 220) / (zoneH + 220);
+                    if (prog > maxProgress) { maxProgress = prog;
+                        closestCard = c; }
+                });
+                if (!closestCard) return;
+                spawnBurst(closestCard.element);
+                const col = closestCard.col;
+                destroyCard(closestCard);
+                notify('💣 BOMBA — enemigo destruido!');
+                if (state.running) trySpawnFromQueue(col);
+            }
+
+            /* ---------- SHIELD ---------- */
+            function activateShield() {
+                state.shieldActive = true;
+                notify('🛡️ ESCUDO DE CAUCHY — protección activada');
+            }
+
+            /* ---------- INVERSE ---------- */
+            function activateInverse() {
+                notify('⏪ CÁLCULO INVERSO — enemigos retroceden');
+                state.cards.forEach(c => {
+                    const el = c.element;
+                    const zone = zones[c.col];
+                    const zoneH = zone.offsetHeight;
+                    const currentTop = parseFloat(window.getComputedStyle(el).top);
+                    const extraTime = c.time * 0.30;
+                    const totalDist = zoneH + 220;
+                    const reverseDist = (extraTime / c.time) * totalDist;
+                    const newTop = Math.max(-220, currentTop - reverseDist);
+                    el.style.animationPlayState = 'paused';
+                    el.style.top = currentTop + 'px';
+                    el.style.animation = 'none';
+                    void el.offsetWidth;
+                    el.style.setProperty('--rise-from', currentTop + 'px');
+                    el.style.setProperty('--rise-to', newTop + 'px');
+                    el.style.animation = `inverseShift ${extraTime}s linear forwards`;
+                    const riseTimer = setTimeout(() => {
+                        if (!state.running) return;
+                        const resumeTop = parseFloat(window.getComputedStyle(el)
+                            .top);
+                        const distLeft = (zoneH * 1.05) - resumeTop;
+                        const fracLeft = Math.max(0.05, distLeft / totalDist);
+                        const fallTime = Math.max(1, fracLeft * c.time);
+                        el.style.animationPlayState = 'paused';
+                        el.style.top = resumeTop + 'px';
+                        el.style.animation = 'none';
+                        void el.offsetWidth;
+                        el.style.animation =
+                            `fallDown ${fallTime}s linear forwards`;
+                        el.style.animationPlayState = 'running';
+                    }, extraTime * 1000);
+                    c.inverseRiseTimer = riseTimer;
+                });
+            }
+
+            /* ---------- FERMAT ---------- */
+            function activateFermat(targetCardObj) {
+                notify('🧠 GOLPE DE GENIO — ¡todos los enemigos destruidos!');
+                const allCards = [...state.cards];
+                const cols = allCards.map(c => c.col);
+                allCards.forEach(c => { spawnBurst(c.element);
+                    destroyCard(c); });
+                if (state.running) {
+                    [...new Set(cols)].forEach(col => trySpawnFromQueue(col));
+                }
+            }
+
+            /* ======================================================
+               BANNER HELPERS
+            ====================================================== */
+            function showBanner(cls) {
+                hideBanner(cls);
+                const b = document.createElement('div');
+                b.className = `pu-banner ${cls}`;
+                b.id = `banner-${cls}`;
+                gameColumns.style.position = 'relative';
+                gameColumns.appendChild(b);
+            }
+
+            function hideBanner(cls) {
+                const b = document.getElementById(`banner-${cls}`);
+                if (b) b.remove();
+            }
+
+            /* ======================================================
+               BURST EFFECT
+            ====================================================== */
+            function spawnBurst(cardEl) {
+                const b = document.createElement('div');
+                b.className = 'burst';
+                b.innerHTML = `<svg viewBox="0 0 60 60" fill="none">
+                    <circle cx="30" cy="30" r="28" stroke="#f0b429" stroke-width="2" opacity="0.8"/>
+                    <circle cx="30" cy="30" r="16" fill="rgba(240,180,40,0.35)"/>
+                    <text x="30" y="37" text-anchor="middle" font-size="18" fill="#f0b429">✦</text>
+                </svg>`;
+                cardEl.appendChild(b);
+                setTimeout(() => b.remove(), 520);
+            }
+
+            /* ======================================================
+               API FETCH FOR DERIVADAS & INTEGRALES
+            ====================================================== */
+            const API_BASE =
+                'https://calculus-invaders-game-backend.onrender.com';
+
+            async function fetchFromAPI(endpoint, difficulty) {
+                const url = `${API_BASE}/${endpoint}?dificultad=${difficulty}`;
+                const resp = await fetch(url);
+                if (!resp.ok) throw new Error(`API ${endpoint} responded ${resp.status}`);
+                const data = await resp.json();
+                return {
+                    latex: data.latex,
+                    answer: String(data.answer),
+                    tolerance_abs: data.tolerance_abs || 0.01,
+                    difficulty: difficulty,
+                    type: endpoint === 'derivada' ? 'derivada' : 'integral',
+                };
+            }
+
+            function getLocalProblem(mode, difficulty) {
+                let pool;
+                if (mode === 'limites') pool = localPoolLimites;
+                else if (mode === 'combinado') {
+                    // For combinado, use límites pool as local fallback
+                    pool = localPoolLimites;
+                } else return null;
+                const filtered = pool.filter(p => p.difficulty === difficulty);
+                if (filtered.length === 0) return pool[Math.floor(Math.random() * pool
+                    .length)];
+                return filtered[Math.floor(Math.random() * filtered.length)];
+            }
+
+            async function fetchProblem(mode, difficulty) {
+                // Modes that use API
+                if (mode === 'derivadas') {
+                    return await fetchFromAPI('derivada', difficulty);
+                }
+                if (mode === 'integrales') {
+                    return await fetchFromAPI('integral', difficulty);
+                }
+                if (mode === 'limites') {
+                    const p = getLocalProblem('limites', difficulty);
+                    return { ...p, type: 'limite' };
+                }
+                if (mode === 'combinado') {
+                    // Randomly pick type
+                    const types = ['limite', 'derivada', 'integral'];
+                    const chosen = types[Math.floor(Math.random() * 3)];
+                    if (chosen === 'limite') {
+                        const p = getLocalProblem('limites', difficulty);
+                        return { ...p, type: 'limite' };
+                    } else if (chosen === 'derivada') {
+                        return await fetchFromAPI('derivada', difficulty);
+                    } else {
+                        return await fetchFromAPI('integral', difficulty);
+                    }
+                }
+                throw new Error('Unknown mode');
+            }
+
+            /* ======================================================
+               BUILD LEVEL PROBLEM QUEUE
+            ====================================================== */
+            async function buildLevelQueue(level) {
+                const cfg = LEVEL_CONFIG[level];
+                const comp = cfg.composition;
+                const mode = state.mode;
+                const problems = [];
+
+                // Create array of required difficulties
+                const diffs = [];
+                for (let i = 0; i < (comp.easy || 0); i++) diffs.push('facil');
+                for (let i = 0; i < (comp.medium || 0); i++) diffs.push('medio');
+                for (let i = 0; i < (comp.hard || 0); i++) diffs.push('dificil');
+
+                // Shuffle
+                for (let i = diffs.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [diffs[i], diffs[j]] = [diffs[j], diffs[i]];
+                }
+
+                // Fetch all problems (with concurrency limit)
+                const fetched = [];
+                for (const diff of diffs) {
+                    try {
+                        const p = await fetchProblem(mode, diff);
+                        // Map difficulty string to internal key
+                        const diffKey = diff === 'facil' ? 'easy' : diff === 'medio' ?
+                            'medium' : 'hard';
+                        p.difficulty = diffKey;
+                        // Assign fall time
+                        p.fallTime = cfg.fallTimes[diffKey] || 40;
+                        fetched.push(p);
+                    } catch (err) {
+                        console.error('Fetch failed for', diff, err);
+                        // Fallback: use local problem
+                        const fallback = getLocalProblem(mode, diff === 'facil' ? 'easy' :
+                            diff === 'medio' ? 'medium' : 'hard');
+                        if (fallback) {
+                            const diffKey = diff === 'facil' ? 'easy' : diff === 'medio' ?
+                                'medium' : 'hard';
+                            fallback.difficulty = diffKey;
+                            fallback.fallTime = cfg.fallTimes[diffKey] || 40;
+                            fallback.type = fallback.type || 'limite';
+                            fetched.push(fallback);
+                        }
+                    }
+                }
+
+                return fetched;
+            }
+
+            /* ======================================================
+               POWERUP ROLL (for card)
+            ====================================================== */
+            function rollPowerUpType() {
+                const r = Math.random();
+                if (state.lives <= 2 && r < 0.20) return 'heart';
+                if (r < 0.65) {
+                    const common = ['freeze', 'bomb', 'inverse'];
+                    return common[Math.floor(Math.random() * 3)];
+                }
+                return Math.random() < 0.5 ? 'shield' : 'fermat';
+            }
+
+            /* ======================================================
+               CREATE CARD IN COLUMN
+            ====================================================== */
+            function createCardInColumn(problem, colIndex) {
                 const zone = zones[colIndex];
+                // Remove existing card if any
                 const oldCard = zone.querySelector('.fcard');
-                if (oldCard) oldCard.remove();
+                if (oldCard) {
+                    const existing = state.cards.find(c => c.element === oldCard);
+                    if (existing) destroyCard(existing);
+                }
+
+                // Determine if this card carries a powerup
+                let cardPu = null;
+                if (problem._hasPowerup) {
+                    cardPu = problem._powerupType;
+                }
 
                 const card = document.createElement('div');
                 card.className = 'fcard';
-                card.style.animation = `fallDown ${problem.time}s linear forwards`;
+                if (cardPu === 'heart') card.classList.add('has-heart');
+                else if (cardPu) card.classList.add('has-powerup');
+
+                const fallTime = problem.fallTime || 40;
+                card.style.animation = `fallDown ${fallTime}s linear forwards`;
                 card.dataset.answer = problem.answer;
-                card.dataset.time = problem.time;
+
+                const diffClass = problem.difficulty === 'easy' ? 'easy' :
+                    problem.difficulty === 'medium' ? 'med' : 'hard';
+                const diffLabel = problem.difficulty === 'easy' ? 'FÁCIL' :
+                    problem.difficulty === 'medium' ? 'MEDIO' : 'DIFÍCIL';
+                const typeLabel = problem.type || 'problema';
+
+                let puBadgeHtml = '';
+                if (cardPu === 'heart') {
+                    puBadgeHtml = '<div class="pu-card-badge">❤️</div>';
+                } else if (cardPu) {
+                    puBadgeHtml =
+                    '<div class="pu-card-badge" style="color:#a78bfa;">?</div>';
+                }
+
+                // Render LaTeX with KaTeX
+                const mathContainer = document.createElement('div');
+                mathContainer.className = 'fc-math';
+                try {
+                    katex.render(problem.latex, mathContainer, { throwOnError: false,
+                        displayMode: false });
+                } catch (e) {
+                    mathContainer.textContent = problem.latex;
+                }
 
                 card.innerHTML = `
-                    <div class="fc-lbl">${problem.difficulty === 'BÁSICO' ? 'límite' : problem.difficulty === 'MEDIO' ? 'derivada' : 'integral'}</div>
-                    <div class="fc-expr">${problem.expr}</div>
-                    <span class="fc-badge ${problem.difficulty === 'BÁSICO' ? 'easy' : problem.difficulty === 'MEDIO' ? 'med' : 'hard'}">${problem.difficulty}</span>
-                    <div class="tring">
-                        <svg viewBox="0 0 36 36"><circle class="tr-track" cx="18" cy="18" r="14"/><circle class="tr-fill" cx="18" cy="18" r="14" style="animation: countdownRing ${problem.time}s linear forwards;"/></svg>
-                        <div class="tring-n">${problem.time}</div>
+                    <div class="fc-top">
+                        <span class="fc-lbl">${typeLabel}</span>
+                        <span class="fc-badge ${diffClass}">${diffLabel}</span>
                     </div>
-                    <div class="ground"></div>
-                `;
+                    ${puBadgeHtml}
+                    <div class="tring">
+                        <svg viewBox="0 0 36 36">
+                            <circle class="tr-track" cx="18" cy="18" r="14"/>
+                            <circle class="tr-fill" cx="18" cy="18" r="14"
+                                style="animation:countdownRing ${fallTime}s linear forwards;"/>
+                        </svg>
+                        <div class="tring-n">${fallTime}</div>
+                    </div>`;
+                // Insert math container at proper position (after fc-top, before tring)
+                const fcTop = card.querySelector('.fc-top');
+                if (fcTop && fcTop.nextSibling) {
+                    card.insertBefore(mathContainer, fcTop.nextSibling);
+                } else {
+                    card.appendChild(mathContainer);
+                }
 
                 zone.appendChild(card);
 
-                let remaining = problem.time;
+                // Countdown timer
+                let remaining = fallTime;
                 const timerDisplay = card.querySelector('.tring-n');
                 const interval = setInterval(() => {
+                    if (state.freezeActive) return;
                     remaining--;
-                    if (remaining >= 0) {
-                        timerDisplay.textContent = remaining;
-                    }
+                    if (remaining >= 0) timerDisplay.textContent = remaining;
                     if (remaining <= 0) {
                         clearInterval(interval);
-                        card.style.opacity = '0.6';
-                        card.querySelector('.tring').style.opacity = '0.5';
-                        if (state.running && state.lives > 0) {
+                        if (!state.running) return;
+                        const cardObj = state.cards.find(c => c.element === card);
+                        if (!cardObj) return;
+                        if (state.shieldActive) {
+                            state.shieldActive = false;
+                            notify('🛡️ Escudo absorbió el daño!');
+                        } else {
                             state.lives--;
                             updateHUD();
-                            zone.querySelector('.fcard')?.remove();
                         }
+                        destroyCard(cardObj);
+                        if (state.lives > 0 && state.running) trySpawnFromQueue(
+                        colIndex);
                     }
                 }, 1000);
 
-                const cardObj = { col: colIndex, element: card, answer: problem.answer, time: problem.time, interval };
+                const cardObj = {
+                    col: colIndex,
+                    element: card,
+                    answer: problem.answer,
+                    time: fallTime,
+                    interval,
+                    frozen: false,
+                    remaining,
+                    powerup: cardPu,
+                    inverseRiseTimer: null,
+                    problem: problem,
+                };
                 state.cards.push(cardObj);
+
+                if (state.freezeActive) {
+                    const computedTop = parseFloat(window.getComputedStyle(card).top);
+                    cardObj.frozenTop = computedTop;
+                    card.style.animationPlayState = 'paused';
+                    cardObj.frozen = true;
+                }
+
                 return cardObj;
             }
 
-            function clearAllCards() {
-                state.cards.forEach(c => {
-                    clearInterval(c.interval);
-                    c.element.remove();
-                });
+            function destroyCard(cardObj) {
+                clearInterval(cardObj.interval);
+                if (cardObj.inverseRiseTimer) clearTimeout(cardObj.inverseRiseTimer);
+                cardObj.element.style.opacity = '0.25';
+                setTimeout(() => { if (cardObj.element.parentNode) cardObj.element
+                        .remove(); }, 300);
+                state.cards = state.cards.filter(c => c !== cardObj);
+            }
+
+            /* ======================================================
+               SPAWN FROM QUEUE
+            ====================================================== */
+            function trySpawnFromQueue(colIndex) {
+                if (!state.running) return;
+                if (state.levelQueue.length === 0) {
+                    // Check if all cards are gone
+                    if (state.cards.length === 0) {
+                        onLevelComplete();
+                    }
+                    return;
+                }
+                // Check if column already has a card
+                const existing = state.cards.find(c => c.col === colIndex);
+                if (existing) return;
+
+                const problem = state.levelQueue.shift();
+                createCardInColumn(problem, colIndex);
+                updateHUD();
+
+                // If queue is now empty and no cards, level complete
+                if (state.levelQueue.length === 0 && state.cards.length === 0) {
+                    // slight delay to let destroy finish
+                    setTimeout(() => {
+                        if (state.running && state.levelQueue.length === 0 && state.cards
+                            .length === 0) {
+                            onLevelComplete();
+                        }
+                    }, 400);
+                }
+            }
+
+            /* ======================================================
+               LEVEL COMPLETION
+            ====================================================== */
+            function onLevelComplete() {
+                if (!state.running) return;
+                stopGameLogic();
+                if (state.level >= 3) {
+                    // Final victory
+                    finalWinOverlay.classList.add('on');
+                } else {
+                    // Win level 1 or 2
+                    winTitle.textContent = `¡NIVEL ${state.level} SUPERADO!`;
+                    winSub.textContent = `Puntos: ${state.points.toLocaleString()} — Prepárate para el nivel ${state.level + 1}`;
+                    winOverlay.classList.add('on');
+                }
+            }
+
+            function advanceToNextLevel() {
+                state.level++;
+                state.levelQueue = [];
                 state.cards = [];
-            }
-
-            // Detiene el juego sin mostrar el overlay de Game Over
-            function stopGame() {
-                if (!state.running) return;
-                state.running = false;
-                clearAllCards();
-                answerInputs.forEach(inp => inp.disabled = true);
-            }
-
-            // Reinicia completamente el estado (vidas, puntos, nivel) pero no inicia
-            function resetGameState() {
-                stopGame(); // detiene si estaba corriendo
-                state.lives = 3;
-                state.points = 0;
-                state.level = 1;
+                state.levelResolved = 0;
+                state.puCounter = 0;
+                state.freezeActive = false;
+                state.shieldActive = false;
+                clearTimeout(state.freezeTimeout);
+                hideBanner('freeze');
+                hideBanner('inverse');
                 updateHUD();
+                renderPuSlots();
+                // Start next level
+                startLevel(state.level);
             }
 
-            function startGame() {
-                if (state.running) {
-                    // Si ya está corriendo, reiniciar desde cero
-                    resetGameState();
-                }
+            async function startLevel(level) {
                 state.running = true;
+                state.level = level;
+                state.levelResolved = 0;
+                state.puCounter = 0;
+                state.cards = [];
+                // Clear all zones
+                zones.forEach(z => {
+                    const cards = z.querySelectorAll('.fcard');
+                    cards.forEach(c => c.remove());
+                });
+                state.freezeActive = false;
+                state.shieldActive = false;
+                clearTimeout(state.freezeTimeout);
+                hideBanner('freeze');
+                hideBanner('inverse');
+                answerInputs.forEach(inp => inp.disabled = false);
                 updateHUD();
-                gameOverOverlay.classList.remove('on');
+                renderPuSlots();
 
-                for (let i = 0; i < 3; i++) {
-                    const problem = getRandomProblem(state.mode);
-                    createCardElement(problem, i);
+                notify(`⬆ Nivel ${level} — ¡Prepárate!`);
+
+                // Build queue
+                try {
+                    const queue = await buildLevelQueue(level);
+                    state.levelQueue = queue;
+                    state.levelTotal = queue.length;
+                } catch (e) {
+                    console.error('Error building level queue:', e);
+                    notify('⚠ Error cargando problemas. Usando reserva local.');
+                    // Emergency fallback
+                    const fallbackQueue = [];
+                    const cfg = LEVEL_CONFIG[level];
+                    const diffs = [];
+                    for (let i = 0; i < (cfg.composition.easy || 0); i++) diffs.push('easy');
+                    for (let i = 0; i < (cfg.composition.medium || 0); i++) diffs.push(
+                        'medium');
+                    for (let i = 0; i < (cfg.composition.hard || 0); i++) diffs.push('hard');
+                    diffs.forEach(d => {
+                        const p = getLocalProblem(state.mode, d);
+                        if (p) {
+                            p.difficulty = d;
+                            p.fallTime = cfg.fallTimes[d] || 40;
+                            p.type = p.type || 'limite';
+                            fallbackQueue.push(p);
+                        }
+                    });
+                    state.levelQueue = fallbackQueue;
+                    state.levelTotal = fallbackQueue.length;
                 }
 
-                answerInputs.forEach(inp => inp.disabled = false);
+                // Distribute powerups
+                distributePowerups(level);
+
+                updateHUD();
+
+                // Spawn initial 3 cards
+                for (let col = 0; col < 3; col++) {
+                    trySpawnFromQueue(col);
+                }
             }
 
-            function endGame() {
-                if (!state.running) return;
-                state.running = false;
-                clearAllCards();
-                gameOverOverlay.classList.add('on');
-                answerInputs.forEach(inp => inp.disabled = true);
+            function distributePowerups(level) {
+                const cfg = LEVEL_CONFIG[level];
+                const puInterval = cfg.puInterval;
+                const puDifficulty = cfg.puDifficulty;
+                // Mark certain cards to carry powerups
+                // Cards at indices: puInterval, 2*puInterval, 3*puInterval... (1-indexed)
+                // But we distribute them across the queue with some randomness
+                const total = state.levelQueue.length;
+                const puIndices = [];
+                for (let i = puInterval - 1; i < total; i += puInterval) {
+                    puIndices.push(i);
+                }
+                // Add some randomness: shift each index by ±1
+                const adjusted = puIndices.map(idx => {
+                    const shift = Math.floor(Math.random() * 3) - 1; // -1, 0, or +1
+                    return Math.max(0, Math.min(total - 1, idx + shift));
+                });
+                // Deduplicate
+                const unique = [...new Set(adjusted)];
+                unique.forEach(idx => {
+                    const problem = state.levelQueue[idx];
+                    if (problem) {
+                        problem._hasPowerup = true;
+                        problem._powerupType = rollPowerUpType();
+                        // Override difficulty to puDifficulty for powerup cards
+                        const cfg = LEVEL_CONFIG[level];
+                        problem.difficulty = puDifficulty;
+                        problem.fallTime = cfg.fallTimes[puDifficulty] || 40;
+                        // We need to re-fetch or adjust the problem to match puDifficulty
+                        // For simplicity, we keep the original latex/answer but change difficulty label & time
+                    }
+                });
             }
 
-            function restartGame() {
-                resetGameState();
-                gameOverOverlay.classList.remove('on');
-                startGame();
+            /* ======================================================
+               CHECK ANSWER
+            ====================================================== */
+            function normalizeAnswer(str) {
+                return str.replace(/\s+/g, '').toLowerCase()
+                    .replace(/^\+inf$/, '+∞').replace(/^inf$/, '+∞')
+                    .replace(/^-inf$/, '-∞')
+                    .replace(/^dne$/i, 'dne').replace(/^noexiste$/i, 'dne')
+                    .replace(/^indefinido$/i, 'dne');
+            }
+
+            function isAnswerCorrect(userAns, correctAns) {
+                const uNorm = normalizeAnswer(userAns);
+                const cNorm = normalizeAnswer(String(correctAns));
+
+                // Exact match for special values
+                if (cNorm === 'dne' || cNorm === '+∞' || cNorm === '-∞') {
+                    return uNorm === cNorm;
+                }
+
+                // Try numeric comparison
+                const uNum = parseFloat(uNorm);
+                const cNum = parseFloat(cNorm);
+                if (!isNaN(uNum) && !isNaN(cNum)) {
+                    if (cNum === 0) {
+                        return Math.abs(uNum) < 0.0001;
+                    }
+                    const relErr = Math.abs(uNum - cNum) / Math.abs(cNum);
+                    return relErr <= 0.20; // 20% tolerance
+                }
+
+                // String match (for expressions)
+                return uNorm === cNorm;
             }
 
             function checkAnswer(colIndex) {
                 if (!state.running) return;
                 const input = answerInputs[colIndex];
-                const userAnswer = input.value.trim();
-                if (userAnswer === '') return;
+                const userAns = input.value.trim();
+                if (!userAns) return;
 
                 const cardObj = state.cards.find(c => c.col === colIndex);
                 if (!cardObj) return;
 
-                const correct = cardObj.answer.replace(/\s/g, '');
-                const user = userAnswer.replace(/\s/g, '');
-
-                let pointsEarned = 0;
-                if (user === correct) {
-                    pointsEarned = 100;
-                } else if (!isNaN(parseFloat(user)) && !isNaN(parseFloat(correct))) {
-                    const uNum = parseFloat(user);
-                    const cNum = parseFloat(correct);
-                    if (Math.abs(uNum - cNum) / Math.abs(cNum) <= 0.1) pointsEarned = 50;
-                    else if (Math.abs(uNum - cNum) / Math.abs(cNum) <= 0.3) pointsEarned = 20;
+                // Check if Fermat is selected
+                const selectedPu = state.selectedSlot >= 0 ? state.puSlots[state
+                    .selectedSlot] : null;
+                if (selectedPu && selectedPu.type === 'fermat') {
+                    if (isAnswerCorrect(userAns, cardObj.answer)) {
+                        usePowerUp(state.selectedSlot, cardObj);
+                        state.points += 200;
+                        updateHUD();
+                        input.value = '';
+                        return;
+                    } else {
+                        flashError(input);
+                        return;
+                    }
                 }
 
-                if (pointsEarned > 0) {
-                    state.points += pointsEarned;
-                    updateHUD();
-                    clearInterval(cardObj.interval);
-                    cardObj.element.remove();
-                    state.cards = state.cards.filter(c => c !== cardObj);
-                    input.value = '';
-                    if (state.points >= state.level * 500) {
-                        state.level++;
-                        updateHUD();
+                if (isAnswerCorrect(userAns, cardObj.answer)) {
+                    // Correct!
+                    let pts = 100;
+                    // Check if exact or close
+                    const uNum = parseFloat(normalizeAnswer(userAns));
+                    const cNum = parseFloat(normalizeAnswer(String(cardObj.answer)));
+                    if (!isNaN(uNum) && !isNaN(cNum) && cNum !== 0) {
+                        const relErr = Math.abs(uNum - cNum) / Math.abs(cNum);
+                        if (relErr < 0.001) pts = 100;
+                        else if (relErr <= 0.10) pts = 50;
+                        else pts = 20;
                     }
-                    const newProblem = getRandomProblem(state.mode);
-                    createCardElement(newProblem, colIndex);
+                    state.points += pts;
+
+                    // Powerup reward
+                    if (cardObj.powerup) {
+                        if (cardObj.powerup === 'heart') {
+                            state.lives = Math.min(state.lives + 1, 5);
+                            notify('❤️ ¡Vida recuperada!');
+                        } else {
+                            storePowerUp(cardObj.powerup);
+                        }
+                    }
+
+                    state.levelResolved++;
+                    updateHUD();
+                    spawnBurst(cardObj.element);
+                    destroyCard(cardObj);
+                    input.value = '';
+
+                    if (state.running) trySpawnFromQueue(colIndex);
                 } else {
-                    input.style.borderColor = 'var(--red)';
-                    setTimeout(() => { input.style.borderColor = ''; }, 500);
+                    flashError(input);
                 }
             }
 
-            // Cambio de modo: si el juego está corriendo, se detiene y se resetea el estado.
-            // El usuario deberá presionar INICIAR para arrancar con el nuevo modo.
-            modeBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    modeBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    const newMode = btn.dataset.mode;
-                    if (state.running) {
-                        // Detener y resetear todo
-                        resetGameState();
+            function flashError(input) {
+                input.style.borderColor = 'var(--red)';
+                setTimeout(() => { input.style.borderColor = ''; }, 500);
+            }
+
+            /* ======================================================
+               SLOT CLICK HANDLERS
+            ====================================================== */
+            puSlotEls.forEach((el, idx) => {
+                el.addEventListener('click', () => {
+                    if (!state.running) return;
+                    const pu = state.puSlots[idx];
+                    if (!pu) return;
+                    if (pu.type === 'fermat') {
+                        selectSlot(idx);
+                        if (state.selectedSlot === idx) notify(
+                            '🧠 Fermat — responde con precisión exacta para activar');
+                        return;
                     }
-                    state.mode = newMode;
-                    // No se inicia automáticamente
+                    if (state.selectedSlot === idx) {
+                        state.selectedSlot = -1;
+                        renderPuSlots();
+                        return;
+                    }
+                    usePowerUp(idx, null);
                 });
             });
 
+            /* ======================================================
+               GAME CONTROL
+            ====================================================== */
+            function clearAllCards() {
+                state.cards.forEach(c => {
+                    clearInterval(c.interval);
+                    if (c.inverseRiseTimer) clearTimeout(c.inverseRiseTimer);
+                    if (c.element.parentNode) c.element.remove();
+                });
+                state.cards = [];
+            }
+
+            function stopGameLogic() {
+                state.running = false;
+                clearAllCards();
+                clearTimeout(state.freezeTimeout);
+                state.freezeActive = false;
+                state.shieldActive = false;
+                hideBanner('freeze');
+                hideBanner('inverse');
+                answerInputs.forEach(inp => inp.disabled = true);
+            }
+
+            function resetGameState() {
+                stopGameLogic();
+                state.lives = 3;
+                state.points = 0;
+                state.level = 1;
+                state.levelQueue = [];
+                state.levelResolved = 0;
+                state.puCounter = 0;
+                state.puSlots = [null, null, null, null, null];
+                state.selectedSlot = -1;
+                state.cards = [];
+                zones.forEach(z => {
+                    const cards = z.querySelectorAll('.fcard');
+                    cards.forEach(c => c.remove());
+                });
+                renderPuSlots();
+                updateHUD();
+            }
+
+            async function startGame() {
+                resetGameState();
+                gameOverOverlay.classList.remove('on');
+                winOverlay.classList.remove('on');
+                finalWinOverlay.classList.remove('on');
+                await startLevel(1);
+            }
+
+            function endGame() {
+                if (!state.running) return;
+                stopGameLogic();
+                gameOverOverlay.classList.add('on');
+            }
+
+            function restartGame() {
+                resetGameState();
+                gameOverOverlay.classList.remove('on');
+                winOverlay.classList.remove('on');
+                finalWinOverlay.classList.remove('on');
+                startLevel(1);
+            }
+
+            /* ======================================================
+               INJECT INVERSE SHIFT KEYFRAMES
+            ====================================================== */
+            const inverseStyle = document.createElement('style');
+            inverseStyle.textContent = `
+                @keyframes inverseShift {
+                    0%   { top: var(--rise-from); }
+                    100% { top: var(--rise-to);   }
+                }
+            `;
+            document.head.appendChild(inverseStyle);
+
+            /* ======================================================
+               EVENT LISTENERS
+            ====================================================== */
+            modeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (state.running) resetGameState();
+                    modeBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.mode = btn.dataset.mode;
+                    updateHUD();
+                });
+            });
             startBtn.addEventListener('click', startGame);
             quitBtn.addEventListener('click', endGame);
             restartFromOverBtn.addEventListener('click', restartGame);
-
-            submitBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const col = parseInt(btn.dataset.col);
-                    checkAnswer(col);
-                });
+            winContinueBtn.addEventListener('click', () => {
+                winOverlay.classList.remove('on');
+                advanceToNextLevel();
             });
-
-            answerInputs.forEach((input, idx) => {
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        checkAnswer(idx);
-                    }
-                });
+            finalRestartBtn.addEventListener('click', () => {
+                finalWinOverlay.classList.remove('on');
+                restartGame();
             });
+            submitBtns.forEach(btn => btn.addEventListener('click', () => checkAnswer(
+                parseInt(btn.dataset.col))));
+            answerInputs.forEach((inp, idx) => inp.addEventListener('keypress', e => {
+                if (e.key === 'Enter') checkAnswer(idx);
+            }));
 
-            document.querySelectorAll('.pu-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    document.querySelectorAll('.pu-item').forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
-                });
-            });
-
+            /* ======================================================
+               INIT
+            ====================================================== */
             updateHUD();
+            renderPuSlots();
         })();
     </script>
 </body>
